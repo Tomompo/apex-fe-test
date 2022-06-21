@@ -1,0 +1,20 @@
+gridster {
+  height: calc(100% - 20px);
+  background-color: #eee;
+}
+.chart-cont {
+  height: 100%;
+  .chart {
+    height: calc(100% - 30px);
+  }
+}
+
+.table-cont {
+  height: 100%;
+
+  .ngx-datatable.scroll-vertical {
+    display: block;
+    height: calc(100% - 30px);
+  }
+}
+

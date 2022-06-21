@@ -1,0 +1,23 @@
+<gridster [options]="options">
+  <gridster-item [ngSwitch]="item.type" [item]="item" *ngFor="let item of dashboard">
+
+     <div *ngSwitchCase="'chart'" class="chart-cont">
+       <span class="drag-handler" style="display: block; width:30px; height: 30px; background: red;"></span>
+       <div class="chart" [id]="'chart' + item.id" #chartCont></div>
+     </div>
+
+     <div *ngSwitchCase="'table'" class="table-cont">
+        <span class="drag-handler" style="display: block; width:30px; height: 30px; background: red;"></span>
+        <ngx-datatable #table class="material"
+                       [headerHeight]="40"
+                       [rowHeight]="40"
+                       [scrollbarV]="true"
+                       [scrollbarH]="true"
+                       [footerHeight]="50"
+                       [rows]="ngxRows"
+                       [columns]="ngxColumns">
+        </ngx-datatable>
+     </div>
+
+  </gridster-item>
+</gridster>
