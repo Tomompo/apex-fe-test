@@ -8,7 +8,6 @@ gridster {
     height: calc(100% - 30px);
   }
 }
-
 .table-cont {
   height: 100%;
 
@@ -17,4 +16,9 @@ gridster {
     height: calc(100% - 30px);
   }
 }
-
+.drag-handler {
+  display: block;
+  width:30px;
+  height: 30px;
+  background: red;
+}

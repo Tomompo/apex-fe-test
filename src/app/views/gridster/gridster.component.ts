@@ -11,6 +11,9 @@ import {GridsterConfig, GridsterItem} from "angular-gridster2";
 import * as Highcharts from "highcharts";
 import {DataTableComponent} from "../data-table/data-table.component";
 import { Chart } from 'highcharts';
+import {ngxColumns, ngxRows} from "../../consts/data-table";
+import {dashboardDefaults, dashboardConfiguration} from "../../consts/dashboard";
+import {basicChart} from "../../consts/basic-chart";
 
 interface APEXGridsterItem extends GridsterItem {
   type: string;
@@ -38,125 +41,86 @@ export class GridsterComponent implements OnInit, AfterViewInit {
 
   options: GridsterConfig = {};
   dashboard: APEXGridsterItem[] = [];
-  ngxRows: any[] = [];
-  ngxColumns: any[] = [];
 
   reloadTimeOut: any = null;
 
-  static itemChange(item: any, itemComponent: any) {
-    console.info('itemChanged', item, itemComponent);
-  }
-
-  res(i?: GridsterItem): void {
-    clearTimeout(this.reloadTimeOut);
-
-    this.reloadTimeOut = setTimeout(() => {
-      this.tables.forEach((t) => t.ngOnInit());
-      this.charts.forEach((c) => c.reflow());
-    }, 250);
-  }
-
   charts: Chart[] = [];
 
+  ngxRows: any[] = ngxRows;
+  ngxColumns: any[] = ngxColumns;
+
   ngAfterViewInit(): void {
-    this.createChart('chart1');
+    this.dashboard.forEach((item) => {
+      if (item.type === WidgetType.CHART) {
+        this.createChart(`chart${item.id}`);
+      }
+    });
   }
 
   ngOnInit() {
     this.options = {
-      itemResizeCallback: (i) => this.res(i),
-      displayGrid: 'always',
-      gridType: 'fit',
-      resizable: {
-        enabled: true,
-        handles: 	{s: true, e: true, n: true, w: true, se: true, ne:true, sw: true, nw: true},
+      ...dashboardConfiguration,
+      itemResizeCallback: () => this.resized(),
+      itemChangeCallback: () => {
+        this.storeDashboard(this.dashboard);
       },
-      swap: false,
-      draggable: {
-        enabled: true,
-        ignoreContent: true,
+      emptyCellClickCallback: () => {
+        this.addItem(WidgetType.CHART);
       },
       emptyCellContextMenuCallback: () => {
-        this.addItem();
+        this.addItem(WidgetType.TABLE);
       },
-      enableEmptyCellContextMenu: true,
-      minCols: 30,
-      maxCols: 30,
-      minRows: 20,
-      maxRows: 20,
-      margin: 5,
-      defaultItemRows: 5,
-      defaultItemCols: 4,
-      minItemCols: 4,
-      minItemRows: 2,
     };
 
-    this.dashboard = [
-      {cols: 7, rows: 6, y: 0, x: 0, type: 'table', id: 0, data: [] },
-      {cols: 7, rows: 6, y: 0, x: 10, type: 'chart', id: 1, data: [] }
-    ];
+    const storedDB = localStorage.getItem('apex-fe-test:dashboard') || 'null';
 
-    // NGX DT
-    this.ngxRows = [
-      { name: 'Molly', gender: 'Female', company: 'Burger King' },
-      { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-      { name: 'Molly', gender: 'Female', company: 'Burger King' }
-    ];
-    this.ngxColumns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }, { name: 'bliah' }];
+    // use stored, or default if none.
+    this.dashboard = JSON.parse(storedDB) || dashboardDefaults;
   }
 
-  changedOptions() {
-    // @ts-ignore
-    this.options.api.optionsChanged();
+  resized(): void {
+    clearTimeout(this.reloadTimeOut);
+
+    this.reloadTimeOut = setTimeout(() => {
+      // redraw components, as they do not resize themselves
+      this.tables.forEach((t) => t.ngOnInit());
+      this.charts.forEach((c) => c.reflow());
+      // store new sizes
+      this.storeDashboard(this.dashboard);
+    }, 250);
   }
 
-  removeItem(item: any) {
+  removeItem(event: any, item: any) {
+    event.preventDefault();
+
     this.dashboard.splice(this.dashboard.indexOf(item), 1);
+
+    this.storeDashboard(this.dashboard);
   }
 
-  addItem() {
-    const a = { cols: 7, rows: 6, y: 0, x: 0, type: WidgetType.TABLE, id: new Date().getTime(), data: [] };
-    const b = { cols: 7, rows: 6, y: 0, x: 10, type: WidgetType.CHART, id: new Date().getTime(), data: [] };
+  addItem(type: WidgetType) {
+    const chart = { cols: 7, rows: 6, y: 0, x: 10, type: WidgetType.CHART, id: new Date().getTime(), data: [] };
+    const table = { cols: 7, rows: 6, y: 0, x: 0, type: WidgetType.TABLE, id: new Date().getTime(), data: [] };
 
-    const r = Math.floor(Math.random() * 2);
+    const use = (type === WidgetType.CHART) ? chart : table;
 
-    const toUse = (r === 1) ? a : b;
+    this.dashboard.push(use);
 
-    this.dashboard.push(toUse);
+    this.storeDashboard(this.dashboard);
 
-    if(toUse.type === 'chart') {
-      this.createChart('chart' + toUse.id);
+    if (type === WidgetType.CHART) {
+      this.createChart('chart' + use.id);
     }
+  }
+
+  storeDashboard(dashboard: APEXGridsterItem[]): void {
+    localStorage.setItem('apex-fe-test:dashboard', JSON.stringify(dashboard));
   }
 
   createChart(contId: string): void {
     // as usual required for some reason
     setTimeout(() => {
-      const chart = Highcharts.chart(contId as any, {
-        chart: {
-          type: 'bar',
-        },
-        title: {
-          text: 'Fruit Consumption'
-        },
-        xAxis: {
-          categories: ['Apples', 'Bananas', 'Oranges']
-        },
-        yAxis: {
-          title: {
-            text: 'Fruit eaten'
-          }
-        },
-        series: [{
-          name: 'Jane',
-          data: [1, 0, 4]
-        }, {
-          name: 'John',
-          data: [5, 7, 3]
-        }]
-      } as any);
+      const chart = Highcharts.chart(contId, basicChart);
 
       this.charts.push(chart);
     });
