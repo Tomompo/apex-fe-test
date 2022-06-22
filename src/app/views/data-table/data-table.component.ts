@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ColumnMode } from "@swimlane/ngx-datatable";
+import { ngxColumns, ngxRows } from "../../consts/data-table";
 
 @Component({
   selector: 'app-data-table',
@@ -8,46 +9,14 @@ import { ColumnMode } from "@swimlane/ngx-datatable";
 })
 export class DataTableComponent implements OnInit {
 
-  ngxRows: any[] = [];
-  ngxColumns: any[] = [];
+  ngxRows = ngxRows;
+  ngxColumns = ngxColumns;
 
   ColumnMode = ColumnMode;
 
   constructor() { }
 
   ngOnInit(): void {
-    // NGX DT
-    this.ngxRows = [
-      { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Molly', gender: 'Female', company: 'Burger King' }
-    ];
-
-    this.ngxColumns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }, { name: 'bliah' }];
   }
 
 }

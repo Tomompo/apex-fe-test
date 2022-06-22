@@ -87,7 +87,7 @@ export class GridsterComponent implements OnInit, AfterViewInit {
       this.charts.forEach((c) => c.reflow());
       // store new sizes
       this.storeDashboard(this.dashboard);
-    }, 250);
+    }, 500);
   }
 
   removeItem(event: any, item: any) {

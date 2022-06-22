@@ -1,23 +1,30 @@
-<gridster [options]="options">
-  <gridster-item [ngSwitch]="item.type" [item]="item" *ngFor="let item of dashboard">
+<div style="display:flex; height: calc(100% - 20px);">
+  <div style="flex: 200px">
+    <h1>Dashboard</h1>
+  </div>
 
-     <div *ngSwitchCase="'chart'" class="chart-cont">
-       <span (contextmenu)="removeItem($event, item)" class="drag-handler"></span>
-       <div class="chart" [id]="'chart' + item.id" #chartCont></div>
-     </div>
+  <gridster [options]="options">
+    <gridster-item [ngSwitch]="item.type" [item]="item" *ngFor="let item of dashboard">
 
-     <div *ngSwitchCase="'table'" class="table-cont">
-        <span (contextmenu)="removeItem($event, item)" class="drag-handler"></span>
-        <ngx-datatable #table class="material"
-                       [headerHeight]="40"
-                       [rowHeight]="40"
-                       [scrollbarV]="true"
-                       [scrollbarH]="true"
-                       [footerHeight]="50"
-                       [rows]="ngxRows"
-                       [columns]="ngxColumns">
-        </ngx-datatable>
-     </div>
+       <div *ngSwitchCase="'chart'" class="chart-cont">
+         <span (contextmenu)="removeItem($event, item)" class="drag-handler"></span>
+         <div class="chart" [id]="'chart' + item.id" #chartCont></div>
+       </div>
 
-  </gridster-item>
-</gridster>
+       <div *ngSwitchCase="'table'" class="table-cont">
+          <span (contextmenu)="removeItem($event, item)" class="drag-handler"></span>
+          <ngx-datatable #table class="material"
+                         [headerHeight]="40"
+                         [rowHeight]="40"
+                         [scrollbarV]="true"
+                         [scrollbarH]="true"
+                         [footerHeight]="50"
+                         [rows]="ngxRows"
+                         [columns]="ngxColumns">
+          </ngx-datatable>
+       </div>
+
+    </gridster-item>
+  </gridster>
+
+</div>

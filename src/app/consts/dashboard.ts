@@ -33,4 +33,5 @@ export const dashboardConfiguration: GridsterConfig = {
   defaultItemCols: 4,
   minItemCols: 4,
   minItemRows: 2,
+  mobileBreakpoint: 800,
 }

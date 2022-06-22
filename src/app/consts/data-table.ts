@@ -1,10 +1,6 @@
-export const ngxRows = [
-  { name: 'Molly', gender: 'Female', company: 'Burger King' },
-  { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-  { name: 'Dany', gender: 'Male', company: 'KFC' },
-  { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-  { name: 'Molly', gender: 'Female', company: 'Burger King' }
-];
+// creates 100,000 rows
+export const ngxRows = Array.from({length: 100000}).map((_, i) => ({ name: 'Molly', gender: 'Female', company: 'Burger King', test: 'APEX' }));
+
 export const ngxColumns = [
   { prop: 'name' },
   { name: 'Gender' },
