@@ -1,7 +1,7 @@
-
-<div style="width:50%;">
-  <ngx-datatable class="material"
-                 [columnMode]="ColumnMode.force"
+<div style="width:65%; margin: auto;">
+  <ngx-datatable #myTable
+                 columnMode="force"
+                 class="material"
                  [headerHeight]="50"
                  [footerHeight]="50"
                  [rowHeight]="50"
@@ -9,5 +9,41 @@
                  [scrollbarH]="true"
                  [rows]="ngxRows"
                  [columns]="ngxColumns">
+
+    <!-- Template for the details in a row -->
+    <ngx-datatable-row-detail [rowHeight]="50">
+      <ng-template let-row="row" ngx-datatable-row-detail-template>
+        <span>pop</span>
+      </ng-template>
+    </ngx-datatable-row-detail>
+
+    <!--  specify the template for each column if you wanted to add column name to access it in template here -->
+    <ngx-datatable-column [sortable]="false">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button (click)="onDetailToggle(row)">expand</button>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- editable column -->
+    <ngx-datatable-column name="name" cellClass="editable-cell">
+      <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+        <div (dblclick)="log(rowIndex, 'name')" *ngIf="editing !== (rowIndex + '-name') else editTmpl">
+          <span>{{row.name}}</span>
+        </div>
+        <ng-template #editTmpl>
+          <div class="form">
+            <input #edit autofocus type="text" [(ngModel)]="row.name" (keydown)="kd($event, row, rowIndex)" (blur)="save(row, rowIndex)">
+          </div>
+        </ng-template>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- leave empty for default template  -->
+    <ngx-datatable-column name="gender"></ngx-datatable-column>
+    <ngx-datatable-column name="company"></ngx-datatable-column>
+    <ngx-datatable-column name="test"></ngx-datatable-column>
+
+    <!--  specify no (ngx-datatable-column)'s and it will all be default   -->
+
   </ngx-datatable>
 </div>

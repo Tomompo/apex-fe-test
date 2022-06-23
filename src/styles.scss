@@ -12,3 +12,14 @@ html, body {
   height: 100%;
 }
 
+.ngx-datatable.material .datatable-body .datatable-body-row .editable-cell {
+  padding: 0px;
+
+  span, .form {
+    padding: 0.9rem 1.2rem;
+    display: block;
+  }
+  input {
+    width: 100%;
+  }
+}
