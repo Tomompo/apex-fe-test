@@ -8,12 +8,15 @@ import { GridsterModule } from "angular-gridster2";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { DataTableComponent } from './views/data-table/data-table.component';
 import {FormsModule} from "@angular/forms";
+import { DataTableProComponent } from './views/data-table-pro/data-table-pro.component';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
     GridsterComponent,
-    DataTableComponent
+    DataTableComponent,
+    DataTableProComponent
   ],
     imports: [
         BrowserModule,
@@ -21,6 +24,7 @@ import {FormsModule} from "@angular/forms";
         GridsterModule,
         NgxDatatableModule,
         FormsModule,
+        HttpClientModule
     ],
   providers: [],
   bootstrap: [AppComponent]

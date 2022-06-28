@@ -1,0 +1,102 @@
+<div style="margin: 1em; display: flex; gap:1em; align-items: center">
+
+    <label>Chart Type</label>
+    <select style="padding: 5px;" (change)="update()" [(ngModel)]="chartType">
+      <option ngValue="column">Column</option>
+      <option ngValue="bar">Bar</option>
+      <option ngValue="line">Line</option>
+      <option ngValue="pie">Pie</option>
+    </select>
+
+    <label>Stack</label>
+    <select style="padding: 5px;" (change)="update()" [(ngModel)]="stacking">
+      <option [ngValue]="true">Yes</option>
+      <option [ngValue]="false">No</option>
+    </select>
+
+</div>
+
+
+<div class="container">
+
+  <section>
+    <h3>Filter results</h3>
+    <input type="search" (input)="filter(filterRows.value)" #filterRows>
+
+    <h3>Columns</h3>
+
+    <ul class="col-list">
+      <li *ngFor="let col of ngxSelectedCols; let i = index">
+        <input  (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }}</label>
+      </li>
+    </ul>
+
+    <h3>Editing Row</h3>
+    <span>{{editingRow}}</span>
+
+  </section>
+
+  <section>
+    <h2>data</h2>
+<!--  add for paged implementation!  -->
+<!--    [externalPaging]="true"-->
+<!--    [count]="1000"-->
+<!--    [offset]="page"-->
+<!--    [limit]="15"-->
+<!--    (page)="fetch($event)"-->
+    <ngx-datatable #myTable
+         columnMode="force"
+         class="material"
+         [headerHeight]="50"
+         [footerHeight]="50"
+         [rowHeight]="50"
+         [scrollbarV]="true"
+         [scrollbarH]="true"
+         [loadingIndicator]="fetching"
+         [rows]="ngxRows"
+         [selected]="ngxSelected"
+         [selectionType]="SelectionType.checkbox"
+         (select)="onSelect($event)">
+
+      <!--   permanent col, for selecting rows   -->
+      <ngx-datatable-column [maxWidth]="55"
+                            [sortable]="false"
+                            [headerCheckboxable]="true"
+                            [checkboxable]="true">
+      </ngx-datatable-column>
+
+      <!-- toggleable -->
+      <ngx-datatable-column *ngFor="let column of ngxColumns" [name]="column.name">
+        <!-- column template -->
+        <ng-template let-row="row" let-index="rowIndex" ngx-datatable-cell-template>
+
+          <div *ngIf="editingRow !== (index + '-' + column.prop) else editCell">
+            <div (dblclick)="editRow(index, column.prop)">
+              {{ row[column.prop] }}
+            </div>
+          </div>
+
+          <ng-template #editCell>
+            <input #edit
+                   autofocus
+                   [type]="column.type"
+                   [value]="row[column.prop]"
+                   (keydown)="keydown($event, column, index, edit.value)"
+                   (blur)="save(column, index, edit.value)">
+          </ng-template>
+
+        </ng-template>
+
+      </ngx-datatable-column>
+    </ngx-datatable>
+
+  </section>
+
+  <section>
+    <h2>charted</h2>
+
+    <div id="chart" style="height: 60vh;"></div>
+  </section>
+
+</div>
+

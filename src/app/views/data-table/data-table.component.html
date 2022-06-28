@@ -1,4 +1,7 @@
 <div style="width:65%; margin: auto;">
+
+  <input class="filter" type="text" (input)="filterRows(filter.value)" placeholder="filter..." #filter>
+
   <ngx-datatable #myTable
                  columnMode="force"
                  class="material"
@@ -41,9 +44,13 @@
     <!-- leave empty for default template  -->
     <ngx-datatable-column name="gender"></ngx-datatable-column>
     <ngx-datatable-column name="company"></ngx-datatable-column>
-    <ngx-datatable-column name="test"></ngx-datatable-column>
+
+    <ngx-datatable-column name="test" [sortable]="false">
+      <ng-template ngx-datatable-header-template>
+        <h3>Ihr name!</h3>
+      </ng-template>
+    </ngx-datatable-column>
 
     <!--  specify no (ngx-datatable-column)'s and it will all be default   -->
-
   </ngx-datatable>
 </div>

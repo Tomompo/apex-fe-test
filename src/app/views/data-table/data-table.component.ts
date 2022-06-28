@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { ColumnMode } from "@swimlane/ngx-datatable";
-import { ngxColumns, ngxRows } from "../../consts/data-table";
+import {ngxColumns, ngxRows} from "../../consts/data-table";
 
 @Component({
   selector: 'app-data-table',
@@ -15,11 +14,11 @@ export class DataTableComponent implements OnInit {
   @ViewChild('edit') edit: ElementRef<HTMLInputElement>;
 
   ngxRows = ngxRows;
+  filterableRows = ngxRows;
   ngxColumns = ngxColumns;
 
-  ColumnMode = ColumnMode;
-
   editing: string = '';
+  selected: any;
 
   constructor() { }
 
@@ -27,7 +26,6 @@ export class DataTableComponent implements OnInit {
   }
 
   onDetailToggle(row: any): void {
-    console.log(row);
     this.table.rowDetail.toggleExpandRow(row);
   }
 
@@ -48,5 +46,10 @@ export class DataTableComponent implements OnInit {
 
   kd($event: KeyboardEvent, row: any, index: number): void {
     return ['Escape', 'Enter'].includes($event.key) ? this.save(row, index) : undefined;
+  }
+
+  filterRows(value: string): void {
+    this.ngxRows = this.filterableRows.filter((row) => row.name.toLowerCase().includes(value));
+    this.table.offset = 0;
   }
 }
