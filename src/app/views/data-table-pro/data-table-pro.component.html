@@ -27,7 +27,7 @@
 
     <ul class="col-list">
       <li *ngFor="let col of ngxSelectedCols; let i = index">
-        <input  (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }}</label>
+        <input (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }}</label>
       </li>
     </ul>
 
@@ -66,14 +66,12 @@
       </ngx-datatable-column>
 
       <!-- toggleable -->
-      <ngx-datatable-column *ngFor="let column of ngxColumns" [name]="column.name">
+      <ngx-datatable-column *ngFor="let column of ngxColumns" [width]="column.width" [name]="column.name" cellClass="editable-cell-tc">
         <!-- column template -->
         <ng-template let-row="row" let-index="rowIndex" ngx-datatable-cell-template>
 
-          <div *ngIf="editingRow !== (index + '-' + column.prop) else editCell">
-            <div (dblclick)="editRow(index, column.prop)">
+          <div class="cell-value" *ngIf="editingRow !== (index + '-' + column.prop) else editCell" (dblclick)="editRow(index, column.prop)">
               {{ row[column.prop] }}
-            </div>
           </div>
 
           <ng-template #editCell>

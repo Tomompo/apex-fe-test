@@ -10,6 +10,7 @@ export interface IColumnDef {
   prop: string;
   name: string;
   type: string;
+  width: number;
 }
 
 export enum InputType {

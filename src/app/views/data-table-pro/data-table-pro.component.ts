@@ -8,7 +8,7 @@ import {
   QueryList, ViewChildren,
 } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import {map, Subject, take} from "rxjs";
+import {map, take} from "rxjs";
 import * as Highcharts from "highcharts";
 import { SelectionType } from "@swimlane/ngx-datatable";
 import { IApexRow, IColumnDef, InputType, IPerson } from 'src/app/interfaces/chart';

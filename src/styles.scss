@@ -25,3 +25,17 @@ html, body {
     width: 100%;
   }
 }
+
+
+.ngx-datatable.material .datatable-body .datatable-body-row .editable-cell-tc {
+  padding: 0px;
+
+  .cell-value {
+    padding: 0.9rem 1.2rem;
+    display: block;
+  }
+  input {
+    padding: 0.9rem 1.2rem;
+    width: 100%;
+  }
+}
