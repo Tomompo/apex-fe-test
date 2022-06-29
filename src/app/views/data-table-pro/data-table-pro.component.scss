@@ -1,3 +1,14 @@
+.options-container {
+  margin: 1em;
+  display: flex;
+  gap:1em;
+  align-items: center;
+
+  select {
+    padding: 5px;
+  }
+}
+
 .container{
   height: calc(100% - 90px);
   display: flex;
@@ -7,6 +18,10 @@
   section {
     padding: 1em;
     flex:40%;
+
+    #chart {
+      height: 60vh;
+    }
 
     &:nth-child(1) {
       flex: 10%;
