@@ -10,6 +10,7 @@ import { DataTableComponent } from './views/data-table/data-table.component';
 import {FormsModule} from "@angular/forms";
 import { DataTableProComponent } from './views/data-table-pro/data-table-pro.component';
 import {HttpClientModule} from "@angular/common/http";
+import {ChartService} from "./services/chart.service";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,9 @@ import {HttpClientModule} from "@angular/common/http";
         FormsModule,
         HttpClientModule
     ],
-  providers: [],
+  providers: [
+    ChartService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

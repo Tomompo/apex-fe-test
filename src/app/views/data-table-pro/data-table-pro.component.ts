@@ -7,12 +7,11 @@ import {
   OnInit,
   QueryList, ViewChildren,
 } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import {map, take} from "rxjs";
 import * as Highcharts from "highcharts";
 import { SelectionType } from "@swimlane/ngx-datatable";
-import { IApexRow, IColumnDef, InputType, IPerson } from 'src/app/interfaces/chart';
+import { IApexRow, IColumnDef } from 'src/app/interfaces/chart';
 import { personColumns } from "../../consts/data-table";
+import { ChartService } from "../../services/chart.service";
 
 @Component({
   selector: 'app-data-table-pro',
@@ -47,7 +46,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
   editingRow: string = '';
 
   constructor(
-    private httpClient: HttpClient,
+    private chartService: ChartService,
     private cd: ChangeDetectorRef,
   ) { }
 
@@ -65,18 +64,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
     this.fetching = true;
     this.page = event.offset || 0;
 
-    this.httpClient.get<{ results: IPerson[] }>(`https://randomuser.me/api/?page=${ this.page + 1 }&results=15&seed=abc`)
-      .pipe(
-        take(1),
-        map(({ results }) => results.map((result) => ({
-          name: result.name.first,
-          email: result.email,
-          age: result.dob.age,
-          regAge: result.registered.age,
-          postcode: Math.floor(result.location.postcode / 1000) || 0,
-          houseNo: Math.floor(result.location.street.number / 120) || 0,
-        }))),
-      ).subscribe((output: IApexRow[]) => {
+    this.chartService.getData(this.page).subscribe((output: IApexRow[]) => {
         this.fetching = false;
         this.ngxRows = output;
         this.ngxFilter = output;
@@ -89,7 +77,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
   update(): void {
     const rows: IApexRow[] = this.ngxSelected.length ? this.ngxSelected: this.ngxRows;
 
-    const { categories, series } = this.genSeriesByType(rows);
+    const { categories, series } = ChartService.genSeriesByType(this.ngxColumns, rows, this.chartType);
 
     // @ts-ignore
     Highcharts.chart('chart', {
@@ -97,7 +85,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
         type: this.chartType,
       },
       title: {
-        text: 'People'
+        text: 'People Data'
       },
       xAxis: {
         categories,
@@ -150,59 +138,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
     this.update();
   }
 
-  // would be in its own service(s)
-  private genSeriesByType(rows: IApexRow[]): { categories: string[], series: any[] } {
-
-    let categories: string[];
-    let series: any[];
-
-    // ignore string columns as they do not work with PIE
-    const stringColumns: string[] = this.ngxColumns.flatMap((col) => {
-      // @ts-ignore
-      if (typeof rows[0][col.prop] === 'string') {
-        return [col.prop];
-      }
-      return [];
-    });
-
-    switch (this.chartType) {
-      case 'pie':
-        // for each of the columns, make a pie series
-        series = this.ngxColumns.flatMap((col) => {
-
-          return stringColumns.includes(col.prop) ? [] : {
-            name: col.name,
-            data: rows.map((row: any) => ({
-              name: row[stringColumns[0]],
-              y: row[col.prop],
-            })),
-          };
-        });
-
-        return { categories: [], series };
-      break;
-
-      default:
-        // @ts-ignore
-        categories = rows.map((row) => row[stringColumns[0]]);
-
-        // for each of the columns, make a series, and provide all rows data for this column
-        series = this.ngxColumns.flatMap((col) => {
-
-          return stringColumns.includes(col.prop) ? [] : {
-            name: col.name,
-            data: rows.map((row: any) => row[col.prop]),
-          };
-
-        });
-
-        return { categories, series };
-      break;
-    }
-  }
-
   save(column: IColumnDef, index: number, value: string): void {
-
       // crazy but required... if we're on the same column, we must have focused out.
       // so we can set it to editing no column. BUT ONLY if the column is still on screen.
       // otherwise it'll error
@@ -224,7 +160,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
       }
 
       // @ts-ignore
-      this.ngxRows[index][column.prop] = this.typeCast(column, value);
+      this.ngxRows[index][column.prop] = ChartService.typeCast(column, value);
 
       this.ngxRows = [...this.ngxRows];
 
@@ -235,23 +171,10 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
     return ['Escape', 'Enter'].includes($event.key) ? this.save(column, index, value) : undefined;
   }
 
-
   editRow(index: number, col: string): void {
       this.editingRow = `${index}-${col}`;
 
       this.cd.detectChanges();
-  }
-
-  // highcharts cannot handle strings for numbers etc, the types need to be cast correctly for the cell.
-  private typeCast(column: IColumnDef, value: string): string | number {
-    switch (column.type) {
-      case InputType.number:
-        return Number(value);
-      break;
-      default:
-        return value;
-      break;
-    }
   }
 
   // tab through columns and rows

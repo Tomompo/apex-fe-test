@@ -21,7 +21,7 @@
 
   <section>
     <h3>Filter results</h3>
-    <input type="search" (input)="filter(filterRows.value)" #filterRows>
+    <input type="search" placeholder="filter..." (input)="filter(filterRows.value)" #filterRows>
 
     <h3>Columns</h3>
 
@@ -42,7 +42,7 @@
 <!--    [externalPaging]="true"-->
 <!--    [count]="1000"-->
 <!--    [offset]="page"-->
-<!--    [limit]="15"-->
+<!--    [limit]="10"-->
 <!--    (page)="fetch($event)"-->
     <ngx-datatable #myTable
          columnMode="force"
