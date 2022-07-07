@@ -1,0 +1,23 @@
+[
+  {
+    "id" : 201,
+    "type": "airports",
+    "name": "MAN",
+    "flights" : 100,
+    "child": "airlines"
+  },
+  {
+    "id" : 202,
+    "name": "BHX",
+    "flights" : 0,
+    "type": "airports",
+    "child": "airlines"
+  },
+  {
+    "id" : 204,
+    "type": "airports",
+    "name": "LUT",
+    "flights" : 25,
+    "child": "airlines"
+  }
+]

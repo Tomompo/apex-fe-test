@@ -7,11 +7,13 @@ import {
   OnInit,
   QueryList, ViewChildren,
 } from '@angular/core';
-import * as Highcharts from "highcharts";
 import { SelectionType } from "@swimlane/ngx-datatable";
 import { IApexRow, IColumnDef } from 'src/app/interfaces/chart';
 import { personColumns } from "../../consts/data-table";
 import { ChartService } from "../../services/chart.service";
+
+import * as Highcharts from "highcharts";
+import Exporting from "highcharts/modules/exporting";
 
 @Component({
   selector: 'app-data-table-pro',
@@ -48,7 +50,9 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
   constructor(
     private chartService: ChartService,
     private cd: ChangeDetectorRef,
-  ) { }
+  ) {
+    Exporting(Highcharts);
+  }
 
   ngOnInit(): void {
     this.fetch();

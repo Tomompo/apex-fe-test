@@ -1,0 +1,55 @@
+<h3>Drill down</h3>
+
+<div class="container">
+
+  <section>
+    <ngx-datatable class="material"
+                   columnMode="force"
+                   rowHeight="auto"
+                   [headerHeight]="50"
+                   [footerHeight]="50"
+                   [rows]="ngxRows"
+                   [loadingIndicator]="loading"
+                   [treeFromRelation]="'parentId'"
+                   [treeToRelation]="'id'"
+                   (treeAction)="onTreeAction($event)">
+          <!-- [treeToRelation] can NOT be 0/undefiend/null -->
+
+          <ngx-datatable-column name="Id" [width]="10"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Name" [isTreeColumn]="true" [treeLevelIndent]="20">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <span style="margin-left: 10px;">{{ row.name }}</span>
+            </ng-template>
+
+            <ng-template ngx-datatable-tree-toggle let-tree="cellContext">
+              <button [disabled]="tree.treeStatus === 'disabled'" (click)="tree.onTreeAction()">
+              <span *ngIf="tree.treeStatus === 'loading'">
+                ...
+              </span>
+                <span *ngIf="tree.treeStatus === 'collapsed'">
+                ↑
+              </span>
+                <span *ngIf="tree.treeStatus === 'expanded'">
+                ↓
+              </span>
+                <span *ngIf="tree.treeStatus === 'disabled'">
+                ⃠
+              </span>
+              </button>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Flights"></ngx-datatable-column>
+
+    </ngx-datatable>
+
+
+
+  </section>
+
+  <section>
+    <div id="chart"></div>
+  </section>
+
+</div>

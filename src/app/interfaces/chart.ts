@@ -9,7 +9,7 @@ export interface IApexRow {
 export interface IColumnDef {
   prop: string;
   name: string;
-  type: string;
+  type?: string;
   width: number;
 }
 

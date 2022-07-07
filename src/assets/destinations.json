@@ -1,0 +1,30 @@
+[
+  {
+    "id" : 101,
+    "name": "United Kingdom",
+    "flights" : 100,
+    "child": "airports",
+    "type": "destinations"
+  },
+  {
+    "id" : 102,
+    "name": "Germany",
+    "flights" : 50,
+    "child": "airports",
+    "type": "destinations"
+  },
+  {
+    "id" : 103,
+    "name": "USA",
+    "flights" : 75,
+    "child": "airports",
+    "type": "destinations"
+  },
+  {
+    "id" : 104,
+    "name": "France",
+    "flights" : 25,
+    "child": "airports",
+    "type": "destinations"
+  }
+]

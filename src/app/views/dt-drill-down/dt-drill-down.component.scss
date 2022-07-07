@@ -1,0 +1,17 @@
+.container {
+
+  display: flex;
+  padding: 2em;
+  gap: 2em;
+
+  section {
+
+    flex:60%;
+
+    &:nth-child(1) {
+      flex: 40%;
+    }
+
+  }
+
+}
