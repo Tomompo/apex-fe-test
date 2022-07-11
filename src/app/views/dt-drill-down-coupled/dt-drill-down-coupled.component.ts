@@ -174,7 +174,7 @@ export class DtDrillDownCoupledComponent implements OnInit {
     return this.ngxRows.filter(r => r.parentId === row.id);
   }
 
-  private yChartSeries(rows: IApexTreeRow[]): any[] {
+  private yChartSeries(rows: IApexTreeRow[]): any {
     return {
       name: 'Flights',
       data: rows.map((row) => ({
@@ -183,10 +183,10 @@ export class DtDrillDownCoupledComponent implements OnInit {
         drilldown: row.id,
         rowData: row,
       })),
-    } as any;
+    };
   }
 
-  private treeMapSeries(rows: IApexTreeRow[]): any[] {
+  private treeMapSeries(rows: IApexTreeRow[]): any {
     return {
       name: 'Flights',
       type: 'treemap',
@@ -198,7 +198,7 @@ export class DtDrillDownCoupledComponent implements OnInit {
         drilldown: row.id,
         rowData: row,
       })),
-    } as any;
+    };
   }
 
 }
