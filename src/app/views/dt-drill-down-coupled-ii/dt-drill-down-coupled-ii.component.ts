@@ -24,7 +24,7 @@ export class DtDrillDownCoupledIiComponent implements OnInit {
 
   chart: any = null;
 
-  chartType: string = 'column';
+  chartType: string = 'treemap';
 
   ngxColumns: any[] = [
     { name: 'id', prop: 'id' },

@@ -1,50 +1,54 @@
-<h3>Drill down - lightly coupled</h3>
-<p>the table and chart are coupled more closely with their behaviour.</p>
+<div class="page">
 
-<label>Chart Type </label>
-<select (change)="updateCt()" [(ngModel)]="chartType">
-  <option ngValue="column">Column</option>
-  <option ngValue="bar">Bar</option>
-  <option ngValue="line">Line</option>
-  <option ngValue="pie">Pie</option>
-  <option ngValue="treemap">Treemap</option>
-</select>
+  <h3>Drill down - lightly coupled</h3>
+  <p>the table and chart are coupled more closely with their behaviour.</p>
 
-<div class="container">
+  <label>Chart Type </label>
+  <select (change)="updateCt()" [(ngModel)]="chartType">
+    <option ngValue="column">Column</option>
+    <option ngValue="bar">Bar</option>
+    <option ngValue="line">Line</option>
+    <option ngValue="pie">Pie</option>
+    <option ngValue="treemap">Treemap</option>
+  </select>
 
-  <section>
-    <ngx-datatable class="material"
-                   columnMode="force"
-                   rowHeight="auto"
-                   [headerHeight]="50"
-                   [footerHeight]="50"
-                   [rows]="ngxRows"
-                   [loadingIndicator]="loading"
-                   [treeFromRelation]="'parentId'"
-                   [treeToRelation]="'id'"
-                   (treeAction)="onTreeAction($event)">
-      <!-- [treeToRelation] can NOT be 0/undefiend/null -->
+  <div class="container">
 
-      <ngx-datatable-column name="Id" [width]="10"></ngx-datatable-column>
+    <section>
+      <ngx-datatable class="material"
+                     columnMode="force"
+                     rowHeight="auto"
+                     [headerHeight]="50"
+                     [footerHeight]="50"
+                     [rows]="ngxRows"
+                     [loadingIndicator]="loading"
+                     [treeFromRelation]="'parentId'"
+                     [treeToRelation]="'id'"
+                     (treeAction)="onTreeAction($event)">
+        <!-- [treeToRelation] can NOT be 0/undefiend/null -->
 
-      <ngx-datatable-column name="Name" [isTreeColumn]="true" [treeLevelIndent]="20">
+        <ngx-datatable-column name="Id" [width]="10"></ngx-datatable-column>
 
-        <ng-template ngx-datatable-cell-template let-row="row">
-          <span style="margin-left: 10px;">{{ row.name }}</span>
-        </ng-template>
+        <ngx-datatable-column name="Name" [isTreeColumn]="true" [treeLevelIndent]="20">
 
-      </ngx-datatable-column>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <span style="margin-left: 10px;">{{ row.name }}</span>
+          </ng-template>
 
-      <ngx-datatable-column name="Flights"></ngx-datatable-column>
+        </ngx-datatable-column>
 
-    </ngx-datatable>
+        <ngx-datatable-column name="Flights"></ngx-datatable-column>
+
+      </ngx-datatable>
 
 
 
-  </section>
+    </section>
 
-  <section>
-    <div id="chart"></div>
-  </section>
+    <section>
+      <div id="chart"></div>
+    </section>
+
+  </div>
 
 </div>

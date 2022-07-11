@@ -1,21 +1,28 @@
-h3, select, p {
-  margin-top: 1.5em;
-}
+.page {
 
-.container {
+  padding: 0em 2em 2em 2em;
 
-  display: flex;
-  padding: 2em;
-  gap: 2em;
+  h3, select, p {
+    margin-top: 1.5em;
+  }
 
-  section {
+  .container {
 
-    flex:60%;
+    margin-top: 2em;
+    display: flex;
+    gap: 2em;
 
-    &:nth-child(1) {
-      flex: 40%;
+    section {
+
+      flex:60%;
+
+      &:nth-child(1) {
+        flex: 40%;
+      }
+
     }
 
   }
+
 
 }
