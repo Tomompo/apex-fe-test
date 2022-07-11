@@ -1,1 +1,50 @@
-<p>dt-drill-down-coupled-ii works!</p>
+<h3>Drill down - heavy coupling</h3>
+<p>Table and chart here are tightly coupled, drill downs are shared and represented on the chart the same as on the table and vice versa.</p>
+
+<label>Chart Type </label>
+<select (change)="updateCt()" [(ngModel)]="chartType">
+  <option ngValue="column">Column</option>
+  <option ngValue="bar">Bar</option>
+  <option ngValue="line">Line</option>
+  <option ngValue="pie">Pie</option>
+  <option ngValue="treemap">Treemap</option>
+</select>
+
+<div class="container">
+
+  <section>
+    <ngx-datatable class="material"
+                   columnMode="force"
+                   rowHeight="auto"
+                   [headerHeight]="50"
+                   [footerHeight]="50"
+                   [rows]="ngxRows"
+                   [loadingIndicator]="loading"
+                   [treeFromRelation]="'parentId'"
+                   [treeToRelation]="'id'"
+                   (treeAction)="onTreeAction($event)">
+      <!-- [treeToRelation] can NOT be 0/undefiend/null -->
+
+      <ngx-datatable-column name="Id" [width]="10"></ngx-datatable-column>
+
+      <ngx-datatable-column name="Name" [isTreeColumn]="true" [treeLevelIndent]="20">
+
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <span style="margin-left: 10px;">{{ row.name }}</span>
+        </ng-template>
+
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Flights"></ngx-datatable-column>
+
+    </ngx-datatable>
+
+
+
+  </section>
+
+  <section>
+    <div id="chart"></div>
+  </section>
+
+</div>

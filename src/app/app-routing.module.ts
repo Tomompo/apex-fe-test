@@ -5,6 +5,7 @@ import { DataTableComponent } from "./views/data-table/data-table.component";
 import { DataTableProComponent } from "./views/data-table-pro/data-table-pro.component";
 import { DtDrillDownComponent } from "./views/dt-drill-down/dt-drill-down.component";
 import {DtDrillDownCoupledComponent} from "./views/dt-drill-down-coupled/dt-drill-down-coupled.component";
+import {DtDrillDownCoupledIiComponent} from "./views/dt-drill-down-coupled-ii/dt-drill-down-coupled-ii.component";
 
 const routes: Routes = [
     {
@@ -31,6 +32,10 @@ const routes: Routes = [
     {
       path: 'data-table-drill-down-coupled',
       component: DtDrillDownCoupledComponent,
+    },
+    {
+      path: 'data-table-drill-down-coupled-ii',
+      component: DtDrillDownCoupledIiComponent,
     },
   ];
 

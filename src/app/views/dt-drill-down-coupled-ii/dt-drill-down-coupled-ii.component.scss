@@ -1,0 +1,21 @@
+h3, select, p {
+  margin-top: 1.5em;
+}
+
+.container {
+
+  display: flex;
+  padding: 2em;
+  gap: 2em;
+
+  section {
+
+    flex:50%;
+
+    &:nth-child(1) {
+      flex: 50%;
+    }
+
+  }
+
+}
