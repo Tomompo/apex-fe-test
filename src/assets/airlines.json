@@ -1,14 +1,15 @@
-[
-  {
-    "id" : 301,
-    "name": "Ryanair",
-    "flights" : 100,
-    "type" : "airlines"
-  },
-  {
-    "id" : 302,
-    "name": "Eurowings",
-    "flights" : 10,
-    "type" : "airlines"
-  }
-]
+{
+  "type": "airlines",
+  "data": [
+    {
+      "id" : 301,
+      "name": "Ryanair",
+      "flights" : 11
+    },
+    {
+      "id" : 302,
+      "name": "Eurowings",
+      "flights" : 17
+    }
+  ]
+}

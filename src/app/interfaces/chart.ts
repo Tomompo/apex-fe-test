@@ -38,3 +38,14 @@ export interface IPerson {
     age: number;
   }
 }
+
+export interface IApexTreeRow {
+  name: string;
+  flights: number;
+  id: string;
+  child?: string;
+  type?: string;
+  level?: number;
+  treeStatus: 'collapsed' | 'loading' | 'expanded' | 'disabled';
+  parentId: string;
+}

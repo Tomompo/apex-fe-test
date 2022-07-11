@@ -1,22 +1,12 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import * as Highcharts from "highcharts";
 import Drilldown from "highcharts/modules/drilldown";
 import Exporting from "highcharts/modules/exporting";
-// import type from "highcharts/modules/treemap";
-import { drillDownChart } from "../../consts/drill-down";
 import { DrillDownService } from "../../services/drill-down-service";
 import { firstValueFrom } from "rxjs";
+import { IApexTreeRow } from "../../interfaces/chart";
+import { drillDownChart } from "../../consts/drill-down";
 
-interface IApexTreeRow {
-  name: string;
-  flights: number;
-  id: number;
-  child?: string;
-  type?: string;
-  level?: number;
-  treeStatus: 'collapsed' | 'loading' | 'expanded' | 'disabled';
-  parentId: number;
-}
 
 @Component({
   selector: 'app-dt-drill-down',
@@ -29,6 +19,12 @@ export class DtDrillDownComponent implements OnInit {
 
   ngxRows: IApexTreeRow[] = [];
 
+  depthMap: Map<number, string> = new Map<number, string>();
+
+  chart: any = null;
+
+  chartType: string = 'column';
+
   ngxColumns: any[] = [
     { name: 'id', prop: 'id' },
     { name: 'Country', prop: 'name' },
@@ -38,26 +34,19 @@ export class DtDrillDownComponent implements OnInit {
   constructor(private dds: DrillDownService) {
     Drilldown(Highcharts);
     Exporting(Highcharts);
-    // type(Highcharts);
   }
 
   ngOnInit(): void {
     this.fetch();
   }
 
-  private async fetch(path?: string, parent?: number): Promise<void> {
-    this.loading = true;
-
-    const rows = await firstValueFrom(this.dds.get(path, parent));
-
-    this.ngxRows = [...this.ngxRows, ...rows];
-
-    this.loading = false;
-
-    this.update();
-  }
-
   onTreeAction({ row }: { row: IApexTreeRow }): void {
+
+    // do nothing if the status is disabled.
+    if (row.treeStatus === 'disabled') {
+      return;
+    }
+
     // close if open already
     if (row.treeStatus === 'expanded') {
       row.treeStatus = 'collapsed';
@@ -70,111 +59,112 @@ export class DtDrillDownComponent implements OnInit {
     // we're opening the tree
     row.treeStatus = 'expanded';
 
+    const existingRows = this.ngxRows.filter(r => r.parentId === row.id);
+
     // if there's data already, no need to re-fetch.
-    if (!!this.ngxRows.find(r => r.parentId === row.id)) {
+    if (existingRows.length) {
       this.ngxRows = [...this.ngxRows];
 
       return;
     }
 
-    // else theres no data, fetch the data.
-    this.fetch(row.child, row.id);
+    const lv = row.level || 0;
+
+    // else theres no data, fetch the next level of data.
+    this.fetch(lv + 1, this.depthMap.get(lv), row.id, null, false);
   }
 
+  private async fetch(level = 0, path?: string, parentId?: string, chartPoint?: any, drawChart = true): Promise<void> {
+    this.loading = true;
 
-  update(): void {
+    const response = await firstValueFrom(this.dds.get(path, parentId));
 
-    setTimeout(() => {
+    this.depthMap.set(level, response.child);
 
-      const dataLevels = new Set(this.ngxRows.map((a) => a.level));
-      const dataTypes = new Set(this.ngxRows.map((a) => a.type));
+    this.ngxRows = [...this.ngxRows, ...response.data];
 
-      const lv: Map<string, any[]> = new Map<string, any[]>();
+    this.loading = false;
 
-      const obj: any = {
-        series: [],
-        drilldown: {
-          series: [],
-        },
-      };
+    if (drawChart) {
+      this.update(response.data, chartPoint);
+    }
+  }
 
-      dataLevels.forEach((level) => {
+  update(newRows: IApexTreeRow[], chartPoint?: any): void {
 
-        if (level === 0) {
-          // this is top level data, needs to be the series
+    if (chartPoint) {
 
-          const dd: any = {
-            id: this.ngxRows.find((row) => row.level === level)?.type || 'test',
-            data: [],
-          };
-
-          this.ngxRows
-            .filter((row) => row.level === level)
-            .forEach((row) => dd.data.push({
-              name: row.name,
-              y: row.flights,
-              drilldown: row.child,
-            }));
-
-          obj.series.push(dd);
-
-        } else {
-          // it's drill down content, put it in the drill down.
-          this.ngxRows.filter((row) => row.level === level)
-            .forEach((row) => {
-              // @ts-ignore
-              const arr = lv.get(row.type) || [];
-
-              arr.push(row);
-
-              // @ts-ignore
-              lv.set(row.type, arr);
-
-            });
-
-        }
-
+      // dynamically applies a series, its gone after drill up so we have to re-provide it.
+      this.chart.addSingleSeriesAsDrilldown(chartPoint, {
+        name: 'Flights',
+        data: newRows.map((r) => ({
+          name: r.name,
+          y: r.flights,
+          drilldown: r.id,
+          rowData: r,
+        }))
       });
 
-      console.log(lv);
+      this.chart.applyDrilldown();
 
-      const chart = {
-        ...drillDownChart,
-        ...obj,
-      };
+      return;
 
-      // console.log(chart);
-      // console.log(drillDownChart);
+    }
 
-      Highcharts.chart('chart', chart);
+    // if no chartpoint provided, theres no chart, make the chart.
+    const chart : any = {
+      ...drillDownChart,
+      series: [
+        {
+          name: 'Flights',
+          data: this.ngxRows
+            .filter((row) => !row.parentId)
+            .map((row) => ({
+              name: row.name,
+              y: row.flights,
+              drilldown: row.id,
+              rowData: row,
+            })),
+        }
+      ],
+      chart: {
+        type: this.chartType,
+        events: {
+          drilldown: (e: any) => {
 
-    });
+            const row = e.point.rowData;
 
+            // has no data or children
+            if (!row.flights || !this.depthMap.get(row.level)) {
+              return;
+            }
 
+            const existingRows = this.ngxRows.filter(r => r.parentId === row.id);
 
-    return;
+            // if there's data already, no need to re-fetch.
+            if (existingRows.length) {
+              this.ngxRows = [...this.ngxRows];
 
-    // // @ts-ignore
-    // Highcharts.chart('chart', {
-    //   ...drillDownChart,
-    //   ...obj,
-    //   chart: {
-    //     ...drillDownChart.chart,
-    //     events: {
-    //       drilldown: (e) => {
-    //         // @ts-ignore
-    //         const row = this.ngxRows[(e.seriesOptions.chartRow - 1) || 0];
-    //
-    //         this.onTreeAction({ row });
-    //       },
-    //       drillup: (e) => {
-    //         console.log(e);
-    //       },
-    //     }
-    //   },
-    //   // series: this.ngxRows.some(a => a.child);
-    // });
+              this.update(existingRows, e.point);
 
+              return;
+            }
+
+            this.fetch(row.level + 1, this.depthMap.get(row.level), row.id, e.point);
+
+          },
+        }
+      },
+    };
+
+    this.chart = Highcharts.chart('chart', chart);
+
+  }
+
+  updateCt() {
+    this.ngxRows = [];
+
+    this.fetch();
   }
 
 }

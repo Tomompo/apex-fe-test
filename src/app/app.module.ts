@@ -13,6 +13,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { ChartService } from "./services/chart.service";
 import { DtDrillDownComponent } from './views/dt-drill-down/dt-drill-down.component';
 import { DrillDownService } from './services/drill-down-service';
+import { DtDrillDownCoupledComponent } from './views/dt-drill-down-coupled/dt-drill-down-coupled.component';
+import { DtDrillDownCoupledIiComponent } from './views/dt-drill-down-coupled-ii/dt-drill-down-coupled-ii.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { DrillDownService } from './services/drill-down-service';
     DataTableComponent,
     DataTableProComponent,
     DtDrillDownComponent,
+    DtDrillDownCoupledComponent,
+    DtDrillDownCoupledIiComponent,
   ],
     imports: [
         BrowserModule,

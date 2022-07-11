@@ -1,5 +1,5 @@
-<h3>Drill down - uncoupled</h3>
-<p>the table and chart are not coupled other than the data they use is shared.</p>
+<h3>Drill down - lightly coupled</h3>
+<p>the table and chart are coupled more closely with their behaviour.</p>
 
 <label>Chart Type </label>
 <select (change)="updateCt()" [(ngModel)]="chartType">
@@ -7,6 +7,7 @@
   <option ngValue="bar">Bar</option>
   <option ngValue="line">Line</option>
   <option ngValue="pie">Pie</option>
+  <option ngValue="treemap">Treemap</option>
 </select>
 
 <div class="container">
@@ -22,19 +23,19 @@
                    [treeFromRelation]="'parentId'"
                    [treeToRelation]="'id'"
                    (treeAction)="onTreeAction($event)">
-          <!-- [treeToRelation] can NOT be 0/undefiend/null -->
+      <!-- [treeToRelation] can NOT be 0/undefiend/null -->
 
-          <ngx-datatable-column name="Id" [width]="10"></ngx-datatable-column>
+      <ngx-datatable-column name="Id" [width]="10"></ngx-datatable-column>
 
-          <ngx-datatable-column name="Name" [isTreeColumn]="true" [treeLevelIndent]="20">
+      <ngx-datatable-column name="Name" [isTreeColumn]="true" [treeLevelIndent]="20">
 
-            <ng-template ngx-datatable-cell-template let-row="row">
-              <span style="margin-left: 10px;">{{ row.name }}</span>
-            </ng-template>
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <span style="margin-left: 10px;">{{ row.name }}</span>
+        </ng-template>
 
-          </ngx-datatable-column>
+      </ngx-datatable-column>
 
-          <ngx-datatable-column name="Flights"></ngx-datatable-column>
+      <ngx-datatable-column name="Flights"></ngx-datatable-column>
 
     </ngx-datatable>
 
