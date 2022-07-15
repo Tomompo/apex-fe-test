@@ -8,12 +8,17 @@ import {
   QueryList, ViewChildren,
 } from '@angular/core';
 import { SelectionType } from "@swimlane/ngx-datatable";
-import { IApexRow, IColumnDef } from 'src/app/interfaces/chart';
+import {IApexFareRow, IApexRow, IColumnDef} from 'src/app/interfaces/chart';
 import { personColumns } from "../../consts/data-table";
 import { ChartService } from "../../services/chart.service";
 
 import * as Highcharts from "highcharts";
 import Exporting from "highcharts/modules/exporting";
+import Treemap from "highcharts/modules/treemap";
+import Heatmap from "highcharts/modules/heatmap";
+import {fares, faresColumns} from "../../consts/fares";
+// @ts-ignore
+import dateFormat from "dateformat";
 
 @Component({
   selector: 'app-data-table-pro',
@@ -33,11 +38,11 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
 
   ngxFilter: IApexRow[] = [];
 
-  ngxRows: IApexRow[] = [];
-  ngxColumns: IColumnDef[] = personColumns;
+  ngxRows: any[] = [];
+  ngxColumns: IColumnDef[] = [];
 
   // columns selected by the user, all by default
-  ngxSelectedCols: IColumnDef[] = [...this.ngxColumns];
+  ngxSelectedCols: IColumnDef[] = [];
   ngxSelected: IApexRow[] = [];
 
   fetching: boolean = false;
@@ -46,16 +51,55 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
   stacking: boolean = true;
   SelectionType = SelectionType;
   editingRow: string = '';
+  dataset = 'people';
+
+  heatmapHigh: string | undefined = undefined;
+  heatmapLow: string | undefined = undefined;
 
   constructor(
     private chartService: ChartService,
     private cd: ChangeDetectorRef,
   ) {
     Exporting(Highcharts);
+    Treemap(Highcharts);
+    Heatmap(Highcharts);
   }
 
   ngOnInit(): void {
-    this.fetch();
+
+    this.start();
+
+  }
+
+  start() : void {
+    if (this.dataset === 'people') {
+
+      this.ngxColumns = faresColumns;
+
+      this.fetch();
+
+    } else {
+
+      this.ngxColumns = faresColumns;
+
+      this.ngxRows = fares;
+
+      this.ngxRows = this.ngxRows.map(row => ({
+        ...row,
+        // @ts-ignore
+        Date: dateFormat(row.Date, 'mmm yy'),
+        // @ts-ignore
+        SixMonthsFare: Number((row.SixMonthsFare || 0).toFixed(2)),
+        ThreeMonthsFare: Number((row.ThreeMonthsFare || 0).toFixed(2)),
+        OneMonthFare: Number((row.OneMonthFare || 0).toFixed(2)),
+        OneWeekFare: Number((row.OneWeekFare || 0).toFixed(2)),
+        WeightedAverage: Number((row.OneWeekFare || 0).toFixed(2)),
+      }));
+
+      this.update();
+
+    }
+    this.ngxSelectedCols = [...this.ngxColumns];
   }
 
   ngAfterViewInit(): void {
@@ -68,23 +112,29 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
     this.fetching = true;
     this.page = event.offset || 0;
 
-    this.chartService.getData(this.page).subscribe((output: IApexRow[]) => {
+      this.ngxColumns = personColumns;
+
+      this.chartService.getData(this.page).subscribe((output: IApexRow[]) => {
         this.fetching = false;
         this.ngxRows = output;
         this.ngxFilter = output;
 
         this.update();
-    });
+      });
   }
 
 
   update(): void {
     const rows: IApexRow[] = this.ngxSelected.length ? this.ngxSelected: this.ngxRows;
 
-    const { categories, series } = ChartService.genSeriesByType(this.ngxColumns, rows, this.chartType);
+    const { categories, series, config } = ChartService.genSeriesByType(this.ngxColumns, rows, this.chartType, {
+      heatmapHigh: this.heatmapHigh,
+      heatmapLow: this.heatmapLow,
+    });
 
     // @ts-ignore
     Highcharts.chart('chart', {
+      ...config,
       chart: {
         type: this.chartType,
       },

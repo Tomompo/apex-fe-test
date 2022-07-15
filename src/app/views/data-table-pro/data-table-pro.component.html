@@ -1,14 +1,21 @@
 <div class="options-container">
 
+    <label for="dataset">Data set</label>
+    <select name="dataset" id="dataset" [(ngModel)]="dataset" (change)="start()">
+      <option value="fares">Fares (Hardcoded)</option>
+      <option value="people">People</option>
+    </select>
+
     <label>Chart Type</label>
     <select (change)="update()" [(ngModel)]="chartType">
       <option ngValue="column">Column</option>
       <option ngValue="bar">Bar</option>
       <option ngValue="line">Line</option>
       <option ngValue="pie">Pie</option>
+      <option ngValue="treemap">Heatmap</option>
     </select>
 
-    <label>Stack</label>
+    <label>Stack (Bar only)</label>
     <select (change)="update()" [(ngModel)]="stacking">
       <option [ngValue]="true">Yes</option>
       <option [ngValue]="false">No</option>
@@ -23,13 +30,26 @@
     <h3>Filter results</h3>
     <input type="search" placeholder="filter..." (input)="filter(filterRows.value)" #filterRows>
 
-    <h3>Columns</h3>
+    <h3>Set columns & colours</h3>
 
     <ul class="col-list">
       <li *ngFor="let col of ngxSelectedCols; let i = index">
-        <input (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }}</label>
+        <input (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }} <span *ngIf="!col.colour">(Unset)</span></label>
+
+        <input type="color" [(ngModel)]="col.colour" (change)="update()">
       </li>
     </ul>
+
+    <h3>Heatmap options</h3>
+    <div>
+      <label>Low <span *ngIf="!heatmapLow">(Unset)</span></label>
+      <input type="color" (change)="update()" [(ngModel)]="heatmapLow">
+    </div>
+
+    <div>
+      <label>High <span *ngIf="!heatmapHigh">(Unset)</span></label>
+      <input type="color" (change)="update()" [(ngModel)]="heatmapHigh">
+    </div>
 
     <h3>Editing Row</h3>
     <span>{{editingRow}}</span>

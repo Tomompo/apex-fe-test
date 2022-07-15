@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  background-color: darkseagreen;
+
+  .table {
+    display: block;
+    height: 45vh;
+
+    .ngx-datatable.scroll-vertical {
+      height: 100%;
+    }
+  }
+
+  .graphs {
+
+  }
+
+}

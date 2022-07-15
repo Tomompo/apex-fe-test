@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {IApexRow, IColumnDef, InputType, IPerson} from "../interfaces/chart";
 import {HttpClient} from "@angular/common/http";
 import {map, Observable, take} from "rxjs";
+import * as Highcharts from "highcharts";
 
 @Injectable({ providedIn: 'root' })
 export class ChartService {
@@ -36,9 +37,10 @@ export class ChartService {
     }
   }
 
-  static genSeriesByType(columns: IColumnDef[], rows: IApexRow[], chartType: string): { categories: string[], series: any[] } {
+  static genSeriesByType(columns: IColumnDef[], rows: IApexRow[], chartType: string, options: any = {}): { categories: string[], series: any[], config: any } {
     let categories: string[];
     let series: any[];
+    let config: Record<string, any> = {};
 
     // ignore string columns as they do not work with PIE
     const stringColumns: string[] = columns.flatMap((col) => {
@@ -50,6 +52,34 @@ export class ChartService {
     });
 
     switch (chartType) {
+      case 'treemap':
+
+        config['colorAxis'] = {
+          minColor: options.heatmapLow || '#ccc',
+          // @ts-ignore
+          maxColor: options.heatmapHigh || Highcharts.getOptions().colors[1],
+        };
+
+        series = columns.flatMap((col) => {
+
+          return stringColumns.includes(col.prop) ? [] : {
+              name: col.name,
+              type: 'treemap',
+              layoutAlgorithm: 'squarified',
+              data: rows.map((row, index) => ({
+              name: row.name,
+              // @ts-ignore
+              colorValue: row[col.prop],
+              // @ts-ignore
+              value: row[col.prop],
+            })),
+          };
+
+        });
+
+        return { categories: [], series, config };
+        break;
+
       case 'pie':
         // for each of the columns, make a pie series
         series = columns.flatMap((col) => {
@@ -58,12 +88,13 @@ export class ChartService {
             name: col.name,
             data: rows.map((row: any) => ({
               name: row[stringColumns[0]],
+              // color: '#FF0000',
               y: row[col.prop],
             })),
           };
         });
 
-        return { categories: [], series };
+        return { categories: [], series, config };
         break;
 
       default:
@@ -71,16 +102,18 @@ export class ChartService {
         categories = rows.map((row) => row[stringColumns[0]]);
 
         // for each of the columns, make a series, and provide all rows data for this column
-        series = columns.flatMap((col) => {
+        series = columns.flatMap((col, index) => {
 
           return stringColumns.includes(col.prop) ? [] : {
             name: col.name,
+            // @ts-ignore
+            color: col.colour || Highcharts.getOptions().colors[index],
             data: rows.map((row: any) => row[col.prop]),
           };
 
         });
 
-        return { categories, series };
+        return { categories, series, config };
         break;
     }
   }

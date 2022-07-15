@@ -6,6 +6,7 @@ import { DataTableProComponent } from "./views/data-table-pro/data-table-pro.com
 import { DtDrillDownComponent } from "./views/dt-drill-down/dt-drill-down.component";
 import {DtDrillDownCoupledComponent} from "./views/dt-drill-down-coupled/dt-drill-down-coupled.component";
 import {DtDrillDownCoupledIiComponent} from "./views/dt-drill-down-coupled-ii/dt-drill-down-coupled-ii.component";
+import {CrosstabComponent} from "./views/crosstab/crosstab.component";
 
 const routes: Routes = [
     {
@@ -20,6 +21,10 @@ const routes: Routes = [
     {
       path: 'data-table',
       component: DataTableComponent,
+    },
+    {
+      path: 'crosstab',
+      component: CrosstabComponent,
     },
     {
       path: 'data-table-extreme',

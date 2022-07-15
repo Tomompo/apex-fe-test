@@ -11,10 +11,10 @@ export const ngxColumns = [
 ];
 
 export const personColumns: IColumnDef[] = [
-  { prop: 'name', name: 'Name', type: InputType.text, width: 10, },
-  { prop: 'email', name: 'Email', type: InputType.text, width: 300, },
-  { prop: 'age', name: 'Age', type: InputType.number, width: 10, },
-  { prop: 'regAge', name: 'Registered age', type: InputType.number, width: 10, },
-  { prop: 'postcode', name: 'Postcode', type: InputType.number, width: 10, },
-  { prop: 'houseNo', name: 'House No', type: InputType.number, width: 10, },
+  { prop: 'name', name: 'Name', type: InputType.text, width: 10, colour: undefined },
+  { prop: 'email', name: 'Email', type: InputType.text, width: 300, colour: undefined },
+  { prop: 'age', name: 'Age', type: InputType.number, width: 10, colour: undefined },
+  { prop: 'regAge', name: 'Registered age', type: InputType.number, width: 10, colour: undefined },
+  { prop: 'postcode', name: 'Postcode', type: InputType.number, width: 10, colour: undefined },
+  { prop: 'houseNo', name: 'House No', type: InputType.number, width: 10, colour: undefined },
 ]

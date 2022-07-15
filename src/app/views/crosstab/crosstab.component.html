@@ -1,0 +1,39 @@
+<div class="container">
+
+  <section class="table">
+
+    <ngx-datatable columnMode="force"
+                   class="material"
+                   [headerHeight]="50"
+                   [footerHeight]="50"
+                   [rowHeight]="50"
+                   [scrollbarV]="true"
+                   [scrollbarH]="true"
+                   [loadingIndicator]="false"
+                   [rows]="ngxRows"
+                   [selected]="ngxSelected"
+                   [selectionType]="SelectionType.checkbox"
+                   (select)="onSelect($event)">
+
+      <!--   permanent col, for selecting rows   -->
+      <ngx-datatable-column [maxWidth]="55"
+                            [sortable]="false"
+                            [checkboxable]="true">
+      </ngx-datatable-column>
+
+      <!-- toggleable -->
+      <ngx-datatable-column *ngFor="let column of ngxColumns"
+                            [width]="column.width"
+                            [name]="column.name"
+                            [prop]="column.prop"
+                            cellClass="editable-cell-tc">
+      </ngx-datatable-column>
+
+    </ngx-datatable>
+  </section>
+
+  <section class="graphs">
+    <h2>Charts init</h2>
+  </section>
+
+</div>
