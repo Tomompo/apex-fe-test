@@ -8,7 +8,7 @@ import {
   QueryList, ViewChildren,
 } from '@angular/core';
 import { SelectionType } from "@swimlane/ngx-datatable";
-import {IApexFareRow, IApexRow, IColumnDef} from 'src/app/interfaces/chart';
+import { IApexRow, IColumnDef } from 'src/app/interfaces/chart';
 import { personColumns } from "../../consts/data-table";
 import { ChartService } from "../../services/chart.service";
 
@@ -26,6 +26,9 @@ import dateFormat from "dateformat";
   styleUrls: ['./data-table-pro.component.scss']
 })
 export class DataTableProComponent implements OnInit, AfterViewInit {
+
+  // @ts-ignore
+  @ViewChildren('abba') inputs: QueryList<ElementRef<HTMLInputElement>>;
 
   // @ts-ignore
   @ViewChildren('edit') edit: QueryList<ElementRef<HTMLInputElement>>;
@@ -51,10 +54,14 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
   stacking: boolean = true;
   SelectionType = SelectionType;
   editingRow: string = '';
-  dataset = 'people';
+  dataset = 'fares';
+
+  savedSeries: any[] = [];
+  series: any[] = [];
 
   heatmapHigh: string | undefined = undefined;
   heatmapLow: string | undefined = undefined;
+
 
   constructor(
     private chartService: ChartService,
@@ -66,23 +73,33 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
     this.start();
-
   }
 
   start() : void {
-    if (this.dataset === 'people') {
 
-      this.ngxColumns = faresColumns;
+    this.savedSeries = [
+      ...this.savedSeries,
+      ...this.series,
+    ];
+
+    this.series = [];
+
+    this.inputs?.forEach((i) => i.nativeElement.checked = true);
+    // multi-series logic ^^
+
+
+    this.ngxSelected = [];
+
+    if (this.dataset === 'people') {
 
       this.fetch();
 
     } else {
 
-      this.ngxColumns = faresColumns;
+      this.ngxColumns = [...faresColumns];
 
-      this.ngxRows = fares;
+      this.ngxRows = [...fares];
 
       this.ngxRows = this.ngxRows.map(row => ({
         ...row,
@@ -96,10 +113,12 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
         WeightedAverage: Number((row.OneWeekFare || 0).toFixed(2)),
       }));
 
-      this.update();
+      this.ngxFilter = this.ngxRows;
 
+      this.ngxSelectedCols = [...this.ngxColumns];
+
+      this.update();
     }
-    this.ngxSelectedCols = [...this.ngxColumns];
   }
 
   ngAfterViewInit(): void {
@@ -132,12 +151,11 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
       heatmapLow: this.heatmapLow,
     });
 
+    this.series = series;
+
     // @ts-ignore
     Highcharts.chart('chart', {
       ...config,
-      chart: {
-        type: this.chartType,
-      },
       title: {
         text: 'People Data'
       },
@@ -157,7 +175,10 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
           stacking: this.stacking ? 'normal' : null,
         }
       },
-      series,
+      series: [
+        ...this.savedSeries,
+        ...this.series,
+      ],
     });
   }
 
@@ -174,7 +195,7 @@ export class DataTableProComponent implements OnInit, AfterViewInit {
 
   // filter columns
   filter(filter: string): void {
-    this.ngxRows = this.ngxFilter.filter((row) => row.name.toLowerCase().includes(filter));
+    this.ngxRows = this.ngxFilter.filter((row: any) => (row.Carrier || '').toLowerCase().includes(filter));
   }
 
   // hide/show columns

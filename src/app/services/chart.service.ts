@@ -66,8 +66,8 @@ export class ChartService {
               name: col.name,
               type: 'treemap',
               layoutAlgorithm: 'squarified',
-              data: rows.map((row, index) => ({
-              name: row.name,
+              data: rows.map((row: any) => ({
+              name: row.name || row.Carrier,
               // @ts-ignore
               colorValue: row[col.prop],
               // @ts-ignore
@@ -85,6 +85,7 @@ export class ChartService {
         series = columns.flatMap((col) => {
 
           return stringColumns.includes(col.prop) ? [] : {
+            type: 'pie',
             name: col.name,
             data: rows.map((row: any) => ({
               name: row[stringColumns[0]],
@@ -99,12 +100,13 @@ export class ChartService {
 
       default:
         // @ts-ignore
-        categories = rows.map((row) => row[stringColumns[0]]);
+        categories = rows.map((row) => row[stringColumns[1]]);
 
         // for each of the columns, make a series, and provide all rows data for this column
         series = columns.flatMap((col, index) => {
 
           return stringColumns.includes(col.prop) ? [] : {
+            type: chartType,
             name: col.name,
             // @ts-ignore
             color: col.colour || Highcharts.getOptions().colors[index],

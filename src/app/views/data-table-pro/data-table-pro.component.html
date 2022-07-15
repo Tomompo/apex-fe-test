@@ -11,6 +11,7 @@
       <option ngValue="column">Column</option>
       <option ngValue="bar">Bar</option>
       <option ngValue="line">Line</option>
+      <option ngValue="spline">Spline</option>
       <option ngValue="pie">Pie</option>
       <option ngValue="treemap">Heatmap</option>
     </select>
@@ -30,11 +31,15 @@
     <h3>Filter results</h3>
     <input type="search" placeholder="filter..." (input)="filter(filterRows.value)" #filterRows>
 
+    <h3>Series ({{series.length}})</h3>
+
+    <button (click)="start()">New</button>
+
     <h3>Set columns & colours</h3>
 
     <ul class="col-list">
       <li *ngFor="let col of ngxSelectedCols; let i = index">
-        <input (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }} <span *ngIf="!col.colour">(Unset)</span></label>
+        <input #abba (change)="colChange($event, col, i)" checked type="checkbox" id="show-col-{{col.name}}"> <label for="show-col-{{col.name}}">{{ col.name }} <span *ngIf="!col.colour">(Unset)</span></label>
 
         <input type="color" [(ngModel)]="col.colour" (change)="update()">
       </li>

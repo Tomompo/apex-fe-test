@@ -1,15 +1,15 @@
 import {IApexFareRow, IColumnDef} from "../interfaces/chart";
 
 export const faresColumns: IColumnDef[] = [
-  { name: 'Month', prop: 'Date', width: 50, type: '', colour: '' },
-  { name: 'Airline', prop: 'Carrier', width: 50, type: '', colour: '' },
+  { name: 'Month', prop: 'Date', width: 50, type: 'string', colour: '' },
+  { name: 'Airline', prop: 'Carrier', width: 50, type: 'string', colour: '' },
   // { name: 'Origin', prop: 'OriginAirport', width: 50, type: '', colour: '' },
   // { name: 'Destination Airport', prop: 'DestinationAirport', width: 50, type: '', colour: '' },
-  { name: 'Six month', prop: 'SixMonthsFare', width: 50, type: '', colour: '' },
-  { name: 'Three month', prop: 'ThreeMonthsFare', width: 50, type: '', colour: '' },
-  { name: 'One month', prop: 'OneMonthFare', width: 50, type: '', colour: '' },
-  { name: 'One week', prop: 'OneWeekFare', width: 50, type: '', colour: '' },
-  { name: 'Average', prop: 'WeightedAverage', width: 50, type: '', colour: '' },
+  { name: 'Six month', prop: 'SixMonthsFare', width: 50, type: 'number', colour: '' },
+  { name: 'Three month', prop: 'ThreeMonthsFare', width: 50, type: 'number', colour: '' },
+  { name: 'One month', prop: 'OneMonthFare', width: 50, type: 'number', colour: '' },
+  { name: 'One week', prop: 'OneWeekFare', width: 50, type: 'number', colour: '' },
+  { name: 'Average', prop: 'WeightedAverage', width: 50, type: 'number', colour: '' },
 ];
 
 // TRAVEL MONTH	AIRLINE	ORIGIN	DESTINATION	CABIN	SECTOR LENGTH (MI)	6 MONTH	3 MONTH	1 MONTH	1 WEEK	WEIGHTED AVERAGE FARE
