@@ -7,6 +7,7 @@ import { DtDrillDownComponent } from "./views/dt-drill-down/dt-drill-down.compon
 import {DtDrillDownCoupledComponent} from "./views/dt-drill-down-coupled/dt-drill-down-coupled.component";
 import {DtDrillDownCoupledIiComponent} from "./views/dt-drill-down-coupled-ii/dt-drill-down-coupled-ii.component";
 import {CrosstabComponent} from "./views/crosstab/crosstab.component";
+import {QueryBuilderComponent} from "./views/query-builder/query-builder.component";
 
 const routes: Routes = [
     {
@@ -41,6 +42,10 @@ const routes: Routes = [
     {
       path: 'data-table-drill-down-coupled-ii',
       component: DtDrillDownCoupledIiComponent,
+    },
+    {
+      path: 'query-builder',
+      component: QueryBuilderComponent,
     },
   ];
 

@@ -16,6 +16,7 @@ import { DrillDownService } from './services/drill-down-service';
 import { DtDrillDownCoupledComponent } from './views/dt-drill-down-coupled/dt-drill-down-coupled.component';
 import { DtDrillDownCoupledIiComponent } from './views/dt-drill-down-coupled-ii/dt-drill-down-coupled-ii.component';
 import { CrosstabComponent } from "./views/crosstab/crosstab.component";
+import { QueryBuilderComponent } from './views/query-builder/query-builder.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { CrosstabComponent } from "./views/crosstab/crosstab.component";
     DtDrillDownCoupledComponent,
     DtDrillDownCoupledIiComponent,
     CrosstabComponent,
+    QueryBuilderComponent,
   ],
     imports: [
         BrowserModule,
