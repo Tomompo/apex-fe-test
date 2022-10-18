@@ -27,12 +27,14 @@ export class QueryBuilderComponent implements OnInit {
     data_points: new FormGroup({}),
     filters : new FormGroup({
       time_period: new FormGroup({
-        type: new FormControl('relative', Validators.required),
-        relative_months: new FormControl(null, Validators.required),
+        type: new FormControl(null),
+        relative_months: new FormControl(null),
         specific: new FormGroup({
 
-          year_from: new FormControl(null, Validators.required),
-          year_to: new FormControl(null, Validators.required),
+          type: new FormControl(null),
+
+          year_from: new FormControl(null),
+          year_to: new FormControl(null),
 
           quarters: new FormGroup({
             one: new FormControl(false),

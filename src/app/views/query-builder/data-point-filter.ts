@@ -45,17 +45,18 @@ export const saveLoadRunExport = {
       "specific": { // omitted if relative
         "year_from": "2020",
         "year_to": "2020",
-        "quarters": { // only this
+        "type": "months", // months/quarters/seasons defines which of the next 3 is defined
+        "quarters": { // A
           "one": false,
           "two": true,
           "three": true,
           "four": false
         },
-        "months": { // or this
+        "months": { // B
           "from": "march",
           "to": "january"
         },
-        "seasons": "summer_winter" // or this, not all 3. depends on what you chose
+        "seasons": "summer_winter" // or C
       }
     },
     "origin": {
