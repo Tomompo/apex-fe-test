@@ -117,6 +117,27 @@ export const saveLoadRunExport = {
   }
 };
 
+// GET time_period data api.com/autocomplete?filter=time_period&type=years
+export const tpdYr = [
+  '2020',
+  '2021',
+  '2022',
+];
+
+// GET time_period data api.com/autocomplete?filter=time_period&type=seasons&year=2021
+export const tpdSe = [
+  'summer',
+  'winter',
+  'summer_winter',
+];
+
+// GET time_period data api.com/autocomplete?filter=time_period&type=months&year=2021
+export const tpdMo = [
+  'jan',
+  'feb',
+  'mar',
+];
+
 
 // GET api.com/autocomplete?filter=origin&type=city&term=stu
 export const resp = [
