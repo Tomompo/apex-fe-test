@@ -7,7 +7,7 @@ import { GridsterComponent } from './views/gridster/gridster.component';
 import { GridsterModule } from "angular-gridster2";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { DataTableComponent } from './views/data-table/data-table.component';
-import { FormsModule } from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DataTableProComponent } from './views/data-table-pro/data-table-pro.component';
 import { HttpClientModule } from "@angular/common/http";
 import { ChartService } from "./services/chart.service";
@@ -30,14 +30,15 @@ import { QueryBuilderComponent } from './views/query-builder/query-builder.compo
     CrosstabComponent,
     QueryBuilderComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        GridsterModule,
-        NgxDatatableModule,
-        FormsModule,
-        HttpClientModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    GridsterModule,
+    NgxDatatableModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule
+  ],
   providers: [
     ChartService,
     DrillDownService,

@@ -1,1 +1,232 @@
-<p>query-builder works!</p>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <label>
+      Name:
+      <input type="text" formControlName="name">
+    </label>
+
+    <br><br>
+
+    <div style="display: flex; gap: 1em;">
+      <label>
+        Table
+        <input type="radio" formControlName="type" value="table">
+      </label>
+
+      <label>
+        Chart
+        <input type="radio" formControlName="type" value="chart">
+      </label>
+    </div>
+
+    <br>
+
+    <!--  component  -->
+    <div class="segment" formGroupName="data_points">
+      <h2>Data points</h2>
+
+      <ng-container *ngFor="let dataPoint of dpf.data_points">
+        <h3>{{ dataPoint.label }}</h3>
+        <div class="segment-select" [formGroupName]="dataPoint.code">
+
+          <ng-container *ngFor="let opt of dataPoint.data">
+            <label>
+              <span>{{ opt.label }}</span>
+              <input type="checkbox" [formControlName]="opt.code">
+            </label>
+          </ng-container>
+
+        </div>
+        <br>
+      </ng-container>
+
+    </div>
+    <!-- END  component  -->
+
+
+    <br>
+    <br>
+
+
+
+    <!--  component  -->
+    <div class="segment" formGroupName="filters">
+      <h2>Filters</h2>
+
+      <ng-container *ngFor="let filter of dpf['filters']">
+        <h3>{{ filter.label }}</h3>
+
+        <ng-container [ngSwitch]="filter.code">
+
+          <section *ngSwitchCase="'cabin_type'">
+            <label>
+              Cabin type
+              <select formControlName="cabin_type">
+                <option *ngFor="let type of filter.data" [value]="type.code">{{ type.label }}</option>
+              </select>
+            </label>
+          </section>
+
+          <section *ngSwitchDefault>
+            <div [formGroupName]="filter.code">
+
+              <div style="display: flex;">
+
+                <div>
+                  <select #filterType style="width: 100px;" formControlName="type" (change)="clearOpts(filter.code)">
+                    <option *ngFor="let opt of filter.data" [value]="opt.code">{{ opt.label }}</option>
+                  </select>
+                </div>
+
+                <form #f="ngForm">
+                  <input #filterSearch
+                         type="search"
+                         name="search"
+                         (input)="onChange(filter.code, filterType.value, filterSearch.value)"
+                         (focus)="onChange(filter.code, filterType.value, filterSearch.value)"
+                         (blur)="clear(filter.code, f)"
+                         autocomplete="off"
+                         ngModel>
+                  <ng-container *ngFor="let opt of autocomplete$.get(filter.code) | async">
+                    <div (click)="onSelect(filter.code, opt)">{{ opt.label }}</div>
+                  </ng-container>
+                </form>
+
+              </div>
+
+              <div *ngFor="let cont of getFilterArray(filter.code); let i = index">
+                <span (click)="remFilterArray(filter.code, i)">{{filter.code}} - {{ cont.value.label }}</span>
+              </div>
+            </div>
+            <br>
+          </section>
+
+        </ng-container>
+      </ng-container>
+
+      <br>
+
+      <section formGroupName="time_period">
+        <label>
+          Relative
+          <input type="radio" formControlName="type" value="relative">
+        </label>
+        <label>
+          Specific
+          <input type="radio" formControlName="type" value="specific">
+        </label>
+
+        <span style="margin-right: 20px;"></span>
+
+        <select formControlName="relative_months">
+          <option [value]="1">1 Months</option>
+          <option [value]="3">3 Months</option>
+          <option [value]="6">6 Months</option>
+          <option [value]="12">12 Months</option>
+        </select>
+
+        <br>
+        <br>
+
+        <div formGroupName="specific">
+          <label>
+            From:
+            <select formControlName="year_from">
+              <option [value]="2020">2020</option>
+            </select>
+          </label>
+          <label>
+            To:
+            <select formControlName="year_to">
+              <option [value]="2020">2020</option>
+            </select>
+          </label>
+
+          <br>
+          <br>
+
+          <div formGroupName="quarters">
+            <label> Q1 <input formControlName="one" type="checkbox"> </label>
+            <label> Q2 <input formControlName="two" type="checkbox"> </label>
+            <label> Q3 <input formControlName="three" type="checkbox"> </label>
+            <label> Q4 <input formControlName="four" type="checkbox"> </label>
+          </div>
+
+          <br>
+
+          <div formGroupName="months">
+            <label>
+              From:
+              <select formControlName="from">
+                <option [value]="'march'">MAR</option>
+              </select>
+            </label>
+            <label>
+              To:
+              <select formControlName="to">
+                <option [value]="'january'">JAN</option>
+              </select>
+            </label>
+          </div>
+
+          <br>
+
+          <div>
+            <label>
+              Seasons:
+              <select formControlName="seasons">
+                <option [value]="'summer_winter'">Summer & Winter</option>
+              </select>
+            </label>
+          </div>
+
+        </div>
+
+        <br>
+      </section>
+    </div>
+    <!-- END component  -->
+
+
+    <br>
+    <br>
+
+
+    <!--  component  -->
+    <div class="segment" formGroupName="groupings">
+      <h2>Group data</h2>
+
+      <ng-container *ngFor="let group of dpf['groupings']">
+
+        <ng-container *ngIf="isControllable(group.code)">
+
+          <h3>{{ group.label }}</h3>
+
+          <label>
+            <select [formControlName]="group.code">
+              <option *ngFor="let opt of group.data.options" [value]="opt.code">{{opt.label}}</option>
+            </select>
+          </label>
+
+        </ng-container>
+
+      </ng-container>
+
+      <label>
+        Gov Taxes
+        <input type="checkbox" formControlName="gov_taxes">
+      </label>
+
+    </div>
+    <!-- end component  -->
+
+
+
+  <button>Submit</button>
+
+</form>
+
+
+<button (click)="save()">Save</button>
+<button (click)="load()">Load</button>
