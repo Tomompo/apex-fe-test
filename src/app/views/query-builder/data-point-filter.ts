@@ -1,9 +1,50 @@
+export const table = {
+  limit: 100,
+  skip: 0,
+  hasMore: true,
+  table : {
+    headers: [
+      { id: '0', code: 'year', label: 'Year' },
+      { id: '0', code: 'month', label: 'Month' },
+      { id: '0', code: 'origin_code', label: 'Origin code' },
+      { id: '0', code: 'origin_name', label: 'Destination name' },
+      { id: '0', code: 'destination_code', label: 'Destination code' },
+    ],
+    rows: [
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+      [ 2022, 'July', 'ABZ', 'Aberdeen', 'LGW' ],
+    ],
+  }
+}
+
+const nxRows: any = [];
+
+table.table.rows.forEach((row) => {
+  const r = {};
+
+  row.forEach((val, index) => {
+    // @ts-ignore
+    r[table.table.headers[index].code] = val;
+  });
+
+  nxRows.push(r);
+});
+
+console.log(nxRows);
+
 // POST SAVE AND RUN sends a completed form
 
 // GET LOAD returns the completed form
 
 // RUN / EXPORT? give you the data you need to run then create the csv? this way query doesn't need to be saved?
 // RUN returns the ran query in the response so they then save it if they want?
+
 export const saveLoadRunExport = {
   "name": "new query",
   "type": "table",
@@ -43,8 +84,10 @@ export const saveLoadRunExport = {
       "type": "specific",
       "relative_months": "3", // omitted if specific
       "specific": { // omitted if relative
+
         "year_from": "2020",
-        "year_to": "2020",
+        "year_to": "2021",
+
         "type": "months", // months/quarters/seasons defines which of the next 3 is defined
         "quarters": { // A
           "one": false,
@@ -57,6 +100,7 @@ export const saveLoadRunExport = {
           "to": "january"
         },
         "seasons": "summer_winter" // or C
+
       }
     },
     "origin": {
